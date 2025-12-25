@@ -15,17 +15,29 @@ source venv/bin/activate  # On Windows: venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-3. Copy `.env.example` to `.env` and fill in your API keys
+3. Create `.env` file from `.env.example` and fill in your API keys:
+```bash
+cp .env.example .env
+# Edit .env with your actual API keys
+```
 
-4. Run database migrations:
+4. Set up PostgreSQL database:
+```bash
+createdb live_interpreter_pro
+```
+
+5. Run database migrations:
 ```bash
 alembic upgrade head
 ```
 
-5. Start the server:
+6. Start the server:
 ```bash
 uvicorn app.main:app --reload
 ```
+
+The API will be available at `http://localhost:8000`
+API documentation at `http://localhost:8000/docs`
 
 ## Project Structure
 
@@ -37,3 +49,15 @@ uvicorn app.main:app --reload
 - `app/schemas/` - Pydantic schemas
 - `app/core/` - Configuration, security, database setup
 
+## Environment Variables
+
+Required:
+- `SECRET_KEY` - Secret key for JWT tokens
+- `DATABASE_URL` - PostgreSQL connection string
+- `DEEPGRAM_API_KEY` - Deepgram API key for speech-to-text
+- `DEEPL_API_KEY` - DeepL API key for translation
+
+Optional:
+- `AZURE_TRANSLATOR_KEY` - Azure Translator key (fallback)
+- `AZURE_TRANSLATOR_ENDPOINT` - Azure Translator endpoint
+- `STRIPE_SECRET_KEY` - Stripe secret key for payments
