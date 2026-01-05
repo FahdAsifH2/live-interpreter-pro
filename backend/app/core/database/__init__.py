@@ -1,4 +1,3 @@
-from .base import Base, get_db, engine, SessionLocal
+from .supabase_client import get_supabase_client, get_supabase, Client
 
-__all__ = ["Base", "get_db", "engine", "SessionLocal"]
-
+__all__ = ["get_supabase_client", "get_supabase", "Client"]

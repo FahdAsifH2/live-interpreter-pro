@@ -20,7 +20,7 @@ class UserUpdate(BaseModel):
 
 
 class UserResponse(UserBase):
-    id: int
+    id: str  # UUID from Supabase Auth
     is_active: bool
     is_verified: bool
     role: UserRole
@@ -43,4 +43,8 @@ class Token(BaseModel):
 
 class TokenData(BaseModel):
     user_id: Optional[int] = None
+
+
+class RefreshTokenRequest(BaseModel):
+    refresh_token: str
 

@@ -4,6 +4,7 @@ from sqlalchemy import pool
 from alembic import context
 import os
 import sys
+import urllib.parse
 
 # Add the app directory to the path
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
@@ -16,7 +17,18 @@ from app.models import *  # Import all models
 config = context.config
 
 # Override sqlalchemy.url with settings
-config.set_main_option("sqlalchemy.url", settings.DATABASE_URL)
+# Supabase requires SSL, ensure connection string is properly formatted
+database_url = settings.DATABASE_URL
+if "supabase" in database_url.lower() and "sslmode" not in database_url.lower():
+    parsed = urllib.parse.urlparse(database_url)
+    query_params = urllib.parse.parse_qs(parsed.query)
+    query_params['sslmode'] = ['require']
+    new_query = urllib.parse.urlencode(query_params, doseq=True)
+    database_url = urllib.parse.urlunparse(
+        (parsed.scheme, parsed.netloc, parsed.path, parsed.params, new_query, parsed.fragment)
+    )
+
+config.set_main_option("sqlalchemy.url", database_url)
 
 # Interpret the config file for Python logging.
 if config.config_file_name is not None:

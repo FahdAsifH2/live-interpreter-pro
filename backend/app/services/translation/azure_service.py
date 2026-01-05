@@ -1,19 +1,36 @@
-from azure.ai.translator import TranslatorClient
-from azure.core.credentials import AzureKeyCredential
 from app.core.config import settings
 from typing import Optional
+
+# Azure Translator is optional - make import optional
+try:
+    from azure.ai.translation.text import TranslatorClient
+    from azure.core.credentials import AzureKeyCredential
+    AZURE_AVAILABLE = True
+except ImportError:
+    AZURE_AVAILABLE = False
+    TranslatorClient = None
+    AzureKeyCredential = None
 
 
 class AzureTranslationService:
     def __init__(self):
+        self.client = None
+        
+        if not AZURE_AVAILABLE:
+            return
+            
         if not all([settings.AZURE_TRANSLATOR_KEY, settings.AZURE_TRANSLATOR_ENDPOINT]):
-            self.client = None
-        else:
+            return
+            
+        try:
             credential = AzureKeyCredential(settings.AZURE_TRANSLATOR_KEY)
             self.client = TranslatorClient(
                 endpoint=settings.AZURE_TRANSLATOR_ENDPOINT,
                 credential=credential
             )
+        except Exception as e:
+            print(f"Failed to initialize Azure Translator: {e}")
+            self.client = None
     
     async def translate(
         self,

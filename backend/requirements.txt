@@ -2,12 +2,11 @@
 fastapi==0.109.0
 uvicorn[standard]==0.27.0
 python-multipart==0.0.6
-websockets==12.0
+websockets>=15.0.0  # Required for Supabase 2.27.0
 
-# Database
-sqlalchemy==2.0.25
-alembic==1.13.1
-psycopg2-binary==2.9.9
+# Database - Supabase
+supabase>=2.8.0
+# Note: supabase package manages its own dependencies (postgrest, storage3, gotrue, realtime)
 redis==5.0.1
 
 # Authentication
@@ -18,16 +17,17 @@ python-decouple==3.8
 # API Clients
 deepgram-sdk==3.2.7
 deepl==1.18.0
-azure-ai-translator==1.0.0
+# Azure Translator (optional - only needed if using Azure fallback)
+# azure-ai-translation>=1.0.0
 
 # Utilities
 pydantic==2.5.3
 pydantic-settings==2.1.0
-httpx==0.26.0
+email-validator>=2.0.0  # Required for EmailStr validation
+httpx>=0.26.0,<0.29.0  # Compatible with supabase 2.27.0
 aiofiles==23.2.1
 
 # Testing
 pytest==7.4.4
 pytest-asyncio==0.23.3
-httpx==0.26.0
 
